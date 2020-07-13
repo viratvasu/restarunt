@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="{% static 'bootstrap/bootstrap.min.css'%}">    <title>Admin</title>
+  </head>
+  <body>
+    <div class="jumbotron">
+    <h4 style="text-align:center;padding:10px;background-color:#007bff;color:white;margin-bottom:50px;display:inline-block;border-radius:50px;"> Do you want delete {{instance}} ?</h4>
+      <form method="post">
+        {% csrf_token %}
+        <input type="submit" value="Delete" class="btn btn-danger" style="margin-top:20px;">&nbsp&nbsp
+        <a href="{{back_url}}" class="btn btn-outline-info" style="margin-top:20px;">No</a
+      </form>
+    </div>
+  </body>
+</html>

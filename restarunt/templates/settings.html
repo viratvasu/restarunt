@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link rel="stylesheet" href="{% static 'bootstrap/bootstrap.min.css'%}">
+  </head>
+  <body>
+    <a class="mr-auto btn btn-info" href="/" style="margin-top:10px;margin-left:20px;"><-- Back</a>
+    <center><h1 style='background-color:#28a745;color:white;border-radius:24px;display:inline-block;padding:5px 10px;margin-top:10px;'>Pending Orders</h1></center>
+    <table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">No.</th>
+      <th scope="col">Name</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">P.no</th>
+      <th scope="col">Complete</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for order in ordered_orders %}
+    <tr>
+      <th scope="row">{{forloop.counter }}</th>
+      <td>{{order.product}}</td>
+      <td>{{order.quantity}}</td>
+      <td>{{order.user_phone}}</td>
+      <td><a href="{% url 'app:delivery_order' order.id %}" class="btn btn-success">Deliveried</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- deliveried orders -->
+<center><h1 style='background-color:#28a745;color:white;border-radius:24px;display:inline-block;padding:5px 10px;margin-top:10px;'>Completed Orders</h1></center>
+    <table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">No.</th>
+      <th scope="col">Name</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">P.no</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for order in completed_orders %}
+    <tr>
+      <th scope="row">{{forloop.counter }}</th>
+      <td>{{order.product}}</td>
+      <td>{{order.quantity}}</td>
+      <td>{{order.user_phone}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+  </body>
+</html>

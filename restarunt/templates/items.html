@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>User</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/bootstrap.min.css'%}">
+  </head>
+  <body>
+    <div class="jumbotron">
+    <div class="container">
+      <h6><a href="/" class="btn btn-info"><-- Back</a></h6>
+      <center><a href="{% url 'app:create_item' %}" class="btn btn-primary" style="margin-top:20px;">Add Foor item</a></center>
+      <div class="row">
+        {% for item in items %}
+        <div class="col-lg-4 col-md-6 col-sm-12">
+          <div class="card" style="margin-top:20px;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+            <img class="card-img-top" src="{{item.image.url}}" alt="Card image cap" style="max-width:100%;max-height:100%;height:calc(100vh/2);">
+            <div class="card-body">
+              <h5 class="card-title">{{item.name}}</h5>
+              <p>{{item.discription}}</p>
+              <p> &#x20b9; {{item.price}} /-</p>
+            </div>
+            <div class="card-body">
+              <a href="{% url 'app:update_item' item.id%}" class="btn btn-warning card-link">Update</a>
+              <a href="{% url 'app:delete_item' item.id %}" class="btn btn-danger card-link">Delete</a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  </body>
+</html>

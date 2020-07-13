@@ -1,0 +1,194 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>User</title>
+    <script src="{% static 'jquery/jquery.min.js'%}" charset="utf-8"></script>
+    <script src="{% static 'bootstrap/bootstrap.min.js'%}" charset="utf-8"></script>
+    <link rel="stylesheet" href="{% static 'bootstrap/bootstrap.min.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"> -->
+    <!-- <script src="https://kit.fontawesome.com/04f3d8d1d6.js" crossorigin="anonymous"></script> -->
+  </head>
+  <body>
+    <!-- navbar starts -->
+      <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <a class="navbar-brand ml-auto mr-auto" href="#">Restarunt</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav ml-auto">
+      {% if request.user.is_authenticated %}
+        <li class="nav-item active" style="margin-left:20px;margin-top:5px;">
+          <a class="nav-link btn btn-light ml-auto mr-auto" href="{% url 'app:settings' %}" style="color:black;">Orders</a>
+        </li>
+        <li class="nav-item active" style="margin-left:20px;margin-top:5px;">
+          <a class="nav-link btn btn-light ml-auto mr-auto" href="{% url 'app:items_' %}" style="color:black;">Food Items</a>
+        </li>
+        <li class="nav-item active" style="margin-left:20px;margin-top:5px;">
+          <a class="nav-link btn btn-light ml-auto mr-auto" href="{% url 'app:logout' %}" style="color:black;">Admin Logout</a>
+        </li>
+      {% else %}
+        <li class="nav-item active" style="margin-left:20px;margin-top:5px;">
+          <a class="nav-link btn btn-light ml-auto mr-auto" href="{% url 'app:login_template' %}" style="color:black;">Admin Login</a>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>
+    <!-- navbar ends -->
+  <div class="custom-container">
+      {% for product in products %}
+          <div class="item row" style="padding:10px 0;margin-top:20px;">
+              <div class="col-12 col-md-6 item-left">
+                <img src={{product.image.url }} alt="{{product}}">
+              </div>
+              <div class="col-12 col-md-6 item-right">
+                <h5>{{product}}</h5>
+                <p>{{product.discription}}</p>
+                <p>&#x20b9; {{product.price}} /- </p>
+                <button class='btn btn-primary' OnClick="buy({{product.id}})">Buy Now</button>
+              </div>
+            </div>
+      {% endfor %}
+  </div>
+  <!-- modal for form -->
+  <!-- Button trigger modal -->
+<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+  Launch demo modal
+</button> -->
+
+<!-- Modal -->
+<!-- <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="custom-container">
+    <div class="popup">
+        <h5 class="popup-title">Complete Your Order</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="popup-content">
+          <form method=POST>
+            <label>Quantity:</label>
+            <input type="number" value="1" style="border:none;border-bottom:1px solid black;background-color:transparent;">
+          </form>
+          <button type="button" class="btn btn-secondary" id="close">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+    </div>
+  </div>
+</div> -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Place Order</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method=POST action="{% url 'app:place_order'%}" id="myForm">
+          {% csrf_token %}
+          <label>Quantity : </label>
+          <input type="hidden" value="" name="product_id" id="product_id">
+          <input type="number" value="1" placeholder="No.of item" name="quantity" style="border:none;border-bottom:1px solid black;background-color:transparent;text-align:center;">
+          <br>
+          <hr>
+          <label>Phone: +91</label>
+          <input type="number" placeholder="Phone Number" name="pno" style="border:none;border-bottom:1px solid black;background-color:transparent;text-align:center;">
+          <br>
+          <br>
+          <center><input type="submit" value="Order" class="btn btn-primary"></center>
+        <!-- <center><button type="submit" class="btn btn-secondary" data-dismiss="modal">Close</button></center> -->
+        </form>
+        <br>
+        <center><span id="shoeError" style="color:red;"></span></center>
+      </div>
+<!--       <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <center><button type="button" class="btn btn-primary">Place Order</button></center>
+      </div> -->
+    </div>
+  </div>
+</div>
+<!-- end of form modal -->
+<!-- verically center modal -->
+
+<!-- Button trigger modal -->
+<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+  Launch demo modal
+</button> -->
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle">Order Placed Successfully</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h4 style="text-align:center;color:red;">We will contact within short time</h4>
+        <br>
+        <ul>
+          <li>We will call and take your address </li>
+          <li>Money will be taken at delivery time</li>
+          <li>We have taken safety measures to fight agianest Corona Virus</li>
+          <!-- <li></li> -->
+        </ul>
+        <center><button type="button" class="btn btn-success" data-dismiss="modal">Ok</button></center>
+      </div>
+<!--       <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+    </div>
+  </div>
+</div>
+
+<!-- end of vertically center modal -->
+  <script type="text/javascript">
+    function buy(id)
+    { 
+      $('#exampleModal').modal('show');
+      var product_id_var  = document.getElementById("product_id");
+      product_id_var.value = id;
+    }
+    $(document).ready(function(){
+      form       = $('#myForm');
+      formAction = form.attr('action');
+      formMethod = form.attr('method');
+      form.submit(function(event){
+        event.preventDefault();
+        formData = form.serialize()
+        $.ajax({
+          method  : formMethod,
+          url     : formAction,
+          data    : formData,
+          success : function(data){
+            console.log("success");
+            $('#exampleModal').modal('hide');
+            $('#exampleModalCenter').modal('show');
+            // console.log(data);
+            
+          },
+          error   : function(data){
+            // console.log('error');
+            // var shoeError = $("#shoeError");
+            // console.log(shoeError)
+            // console.log(shoeError.val())
+            $('#shoeError').text(" ==> "+data.responseJSON.message)
+            // shoeError.text=data.responseJSON.message;
+          },
+        })
+      })
+    });
+  </script>
+  </body>
+</html>

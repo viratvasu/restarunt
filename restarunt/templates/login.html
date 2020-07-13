@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+  </head>
+  <body>
+    <h1 style="text-align:center;background-color:#007bff;color:white;border-radius:24px;padding:5px 0;">Login</h1>
+    <form method="POST" action="{% url 'app:login' %}">
+      {% csrf_token %}
+      <center><input type="text" placeholder="Enter Username" name="username" style="border-radius:24px;padding:10px;border:2px solid #007bff;"></center><br>
+      <center><input type="password" placeholder="Enter Passsword" name="password" style="border-radius:24px;padding:10px;border:2px solid #007bff;"></center><br>
+      <center><input type="submit" value="Login" style="color:white;padding:10px 20px ;background-color:#007bff;border-radius:24px;border:none;"></center>
+    </form>
+    {% if messages %}
+        {% for message in messages %}
+          <h4 style="text-align:center;color:red;"> => {{message}}</h4>
+        {% endfor %}
+    {% endif %}
+  </body>
+</html>
